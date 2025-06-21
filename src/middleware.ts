@@ -15,13 +15,12 @@ export async function middleware(request: NextRequest) {
 
 	if (isProtectedRoute && !accessToken && refreshToken) {
 		try {
-			const response = await fetch(
-				new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`, request.url),
-				{
-					method: "POST",
-					headers: { Cookie: `REFRESH_TOKEN=${refreshToken}` },
-				},
-			);
+			const path = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`;
+			const response = await fetch(new URL(path, request.url), {
+				method: "POST",
+				credentials: "include",
+				// headers: { Cookie: `REFRESH_TOKEN=${refreshToken}` },
+			});
 
 			if (response.ok) {
 				return NextResponse.next();
