@@ -1,3 +1,4 @@
+import LoginForm from "@/components/products/loginForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,6 +6,12 @@ export const metadata: Metadata = {
 	description: "Страница входа",
 };
 
-export default function Login() {
-	return <div>Войти</div>;
-}
+const LoginPage = () => {
+	return (
+		<div>
+			<LoginForm />
+		</div>
+	);
+};
+
+export default LoginPage;
