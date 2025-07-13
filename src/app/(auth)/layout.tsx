@@ -1,4 +1,5 @@
-import Footer from "@/components/layout/footer";
+import Footer from "@/components/layout/footer/footer";
+import StoreProvider from "@/libs/redux/providers/storeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
@@ -26,10 +27,12 @@ export default function AuthLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
-				<div className="flex flex-col min-h-screen">
-					<main className="flex-grow-1">{children}</main>
-					<Footer />
-				</div>
+				<StoreProvider>
+					<div className="flex flex-col min-h-screen">
+						<main className="flex-grow-1">{children}</main>
+						<Footer />
+					</div>
+				</StoreProvider>
 			</body>
 		</html>
 	);

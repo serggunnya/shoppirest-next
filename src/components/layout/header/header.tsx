@@ -1,4 +1,5 @@
 import Logo from "@/components/layout/header/logo";
+import CheckAuth from "./checkAuth";
 
 export default function Header() {
 	return (
@@ -10,6 +11,10 @@ export default function Header() {
 							<div className="flex justify-between">
 								<Logo />
 							</div>
+						</div>
+
+						<div className="ml-auto">
+							<CheckAuth />
 						</div>
 					</div>
 				</div>
