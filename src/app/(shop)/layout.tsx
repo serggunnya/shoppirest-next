@@ -1,7 +1,8 @@
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import StoreProvider from "@/libs/redux/providers/storeProvider";
+
 import "../globals.css";
 
 const geistSans = Geist({
@@ -27,13 +28,11 @@ export default function MainLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
-				<div className="flex flex-col min-h-screen">
-					<Header />
-					<main className="flex-grow-1 flex relative pt-20">
-						<div className="container p-5 mx-auto xs:mx-0 ">{children}</div>
-					</main>
-					<Footer />
-				</div>
+				<StoreProvider>
+					<div className="flex flex-col min-h-screen">
+						<main className="flex-grow-1 flex relative mt-15 w-full">{children}</main>
+					</div>
+				</StoreProvider>
 			</body>
 		</html>
 	);
