@@ -1,4 +1,6 @@
+import CatalogMenu from "@/components/layout/header/catalogMenu";
 import Logo from "@/components/layout/header/logo";
+import SearchBar from "@/components/layout/header/searchBar";
 import CheckAuth from "./checkAuth";
 
 export default function Header() {
@@ -10,6 +12,10 @@ export default function Header() {
 						<div className="flex-grow-1 items-center">
 							<div className="flex justify-between">
 								<Logo />
+								<div className="flex items-center">
+									<CatalogMenu />
+									<SearchBar />
+								</div>
 							</div>
 						</div>
 
