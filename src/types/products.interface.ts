@@ -8,17 +8,15 @@ export interface ICategory {
 }
 
 export interface ISelectableValue {
-	val: Array<string | number | boolean>;
+	val: (string | number | boolean)[];
 }
 
 export interface IRangeValue {
-	min: number;
-	max: number;
+	min?: number;
+	max?: number;
 }
 
-export interface IFiltersBody {
-	[key: string]: ISelectableValue | IRangeValue;
-}
+export type IFiltersBody = Record<string, ISelectableValue | IRangeValue>;
 
 export interface ISearchParams {
 	category: string;
@@ -113,3 +111,5 @@ export interface IFacet {
 	order: number;
 	options: Array<ISelectableOption | IRangeOption>;
 }
+
+export type FiltersFormState = Record<string, ISelectableValue | IRangeValue>;
