@@ -1,16 +1,15 @@
 "use client";
 
-import { FiltersFormState } from "@/libs/zod/filtersSchema";
-import { IRangeOption } from "@/types/products.interface";
+import { FiltersFormState, IRangeOption } from "@/types/products.interface";
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 type RangeFilterProps = {
 	option: IRangeOption;
-	control: Control<FiltersFormState>;
 };
 
-const RangeFilter: React.FC<RangeFilterProps> = ({ option, control }) => {
+const RangeFilter: React.FC<RangeFilterProps> = ({ option }) => {
+	const { control } = useFormContext<FiltersFormState>();
 	return (
 		<div className="pl-4">
 			<Controller

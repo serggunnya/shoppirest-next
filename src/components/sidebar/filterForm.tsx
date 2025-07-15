@@ -1,17 +1,14 @@
-import { FiltersFormState } from "@/libs/zod/filtersSchema";
-import { IFacet, IRangeOption, ISelectableOption } from "@/types/products.interface";
-import { useFormContext } from "react-hook-form";
+import { IFacet, IFiltersBody, IRangeOption, ISelectableOption } from "@/types/products.interface";
 import CheckboxFilter from "./checkboxFilter";
 import RangeFilter from "./rangeFilter";
 
 interface FilterFormProps {
 	facets: IFacet[] | undefined;
+	setFilters: (data: IFiltersBody) => void;
 }
 
 // Внутренний компонент, который имеет доступ к данным фасетов
-export function FilterForm({ facets }: FilterFormProps) {
-	const { control } = useFormContext<FiltersFormState>();
-
+export function FilterForm({ facets, setFilters }: FilterFormProps) {
 	return (
 		<ul>
 			{facets?.map((facet) => {
@@ -21,7 +18,7 @@ export function FilterForm({ facets }: FilterFormProps) {
 						<div>
 							{facet.options.map((option, i) => {
 								if (facet.type === "NUMERIC") {
-									return <RangeFilter key={i} option={option as IRangeOption} control={control} />;
+									return <RangeFilter key={i} option={option as IRangeOption} />;
 								}
 								return (
 									<CheckboxFilter
@@ -29,7 +26,7 @@ export function FilterForm({ facets }: FilterFormProps) {
 										type={facet.type}
 										option={option as ISelectableOption}
 										display_value={facet.display_value}
-										control={control}
+										setFilters={setFilters}
 									/>
 								);
 							})}
