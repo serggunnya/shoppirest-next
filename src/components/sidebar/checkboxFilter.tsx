@@ -1,23 +1,24 @@
 "use client";
 
-import { FiltersFormState } from "@/libs/zod/filtersSchema";
-import { ISelectableOption } from "@/types/products.interface";
+import { FiltersFormState, IFiltersBody, ISelectableOption } from "@/types/products.interface";
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 type CheckboxFilterProps = {
 	option: ISelectableOption;
 	type: string;
 	display_value: Record<string, string> | null;
-	control: Control<FiltersFormState>;
+	setFilters: (data: IFiltersBody) => void;
 };
 
 const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 	option,
 	type,
 	display_value,
-	control,
+	setFilters,
 }) => {
+	const { control, getValues } = useFormContext<FiltersFormState>();
+
 	return (
 		<div className="pl-4">
 			<Controller
@@ -26,18 +27,24 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 				render={({ field }) => {
 					const values = field.value || [];
 					const selectValue = option.data.value;
-					const isChecked = values.includes(selectValue);
+					const isChecked = values.length > 0 && values?.includes(selectValue);
 
 					const handleChange = () => {
 						field.onChange(
 							isChecked ? values.filter((v) => v !== selectValue) : [...values, selectValue],
 						);
+						setFilters(structuredClone(getValues()));
 					};
 
 					if (type === "TEXT") {
 						return (
 							<label>
-								<input type="checkbox" checked={isChecked} onChange={handleChange} />
+								<input
+									type="checkbox"
+									checked={isChecked}
+									onChange={handleChange}
+									disabled={option.amount === 0}
+								/>
 								<span className="ml-2">
 									{`${display_value?.[String(option.data.value)] || option.data.value} (${option.amount})`}
 								</span>
@@ -46,7 +53,12 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 					} else if (type === "STRING") {
 						return (
 							<label>
-								<input type="checkbox" checked={isChecked} onChange={handleChange} />
+								<input
+									type="checkbox"
+									checked={isChecked}
+									onChange={handleChange}
+									disabled={option.amount === 0}
+								/>
 								<span className="ml-2">{`${option.data.value} (${option.amount})`}</span>
 							</label>
 						);
@@ -57,7 +69,12 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 
 						return (
 							<label>
-								<input type="checkbox" checked={isChecked} onChange={handleChange} />
+								<input
+									type="checkbox"
+									checked={isChecked}
+									onChange={handleChange}
+									disabled={option.amount === 0}
+								/>
 								<span className="ml-2">{`${value / unit_div} ${unit} (${option.amount})`}</span>
 							</label>
 						);
@@ -65,7 +82,12 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 						const value = option.data.value as boolean;
 						return (
 							<label>
-								<input type="checkbox" checked={isChecked} onChange={handleChange} />
+								<input
+									type="checkbox"
+									checked={isChecked}
+									onChange={handleChange}
+									disabled={option.amount === 0}
+								/>
 								<span className="ml-2">{`${value ? "Есть" : "Нет"} (${option.amount})`}</span>
 							</label>
 						);

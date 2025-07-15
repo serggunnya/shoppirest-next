@@ -51,7 +51,7 @@ const searchParamUtil = {
 		const searchParams = new URLSearchParams();
 		for (const [key, value] of Object.entries(filters)) {
 			if ("val" in value && Array.isArray(value.val)) {
-				searchParams.append(key, value.val.join("	"));
+				searchParams.append(key, value.val.join("|"));
 				continue;
 			}
 

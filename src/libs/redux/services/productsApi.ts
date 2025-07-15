@@ -4,6 +4,7 @@ import {
 	ISearchRequest,
 	ISearchResponse,
 } from "@/types/products.interface";
+import searchParamUtil from "@/utils/searchParamUtil";
 import { baseApi } from "./baseApi";
 
 export const ProductsApi = baseApi.injectEndpoints({
@@ -35,7 +36,7 @@ export const ProductsApi = baseApi.injectEndpoints({
 				return {
 					url: `api/v1/products/facets?${urlParams}`,
 					method: "POST",
-					body: filters,
+					body: searchParamUtil.trim(filters),
 				};
 			},
 		}),

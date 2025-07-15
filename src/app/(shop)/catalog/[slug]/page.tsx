@@ -1,12 +1,12 @@
 "use client";
 import Pagination from "@/components/products/pagination";
 import ProductsList from "@/components/products/productsList";
-import { Sidebar } from "@/components/sidebar/sidebar";
+import Sidebar from "@/components/sidebar/sidebar";
 
 import { useSearchProductsQuery } from "@/libs/redux/services/productsApi";
-import { FiltersFormState } from "@/libs/zod/filtersSchema";
-import { IFiltersBody, ISearchRequest } from "@/types/products.interface";
-import parseFiltersFromParams from "@/utils/parseFiltersFromParams";
+
+import { FiltersFormState, IFiltersBody, ISearchRequest } from "@/types/products.interface";
+import searchParamUtil from "@/utils/searchParamUtil";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
@@ -20,7 +20,7 @@ export default function ProductsByCategory() {
 
 	// "Примененные" фильтры взятые из URL - источник правды.
 	const appliedFilters: FiltersFormState = useMemo(
-		() => parseFiltersFromParams(searchParams),
+		() => searchParamUtil.parse(searchParams),
 		[searchParams],
 	);
 
@@ -52,9 +52,9 @@ export default function ProductsByCategory() {
 	// обработчик применения фильтров
 	const submitFilters = useCallback(
 		(data: FiltersFormState) => {
-			console.log("Submitting:", data);
-			//     const newParamsString = serializeFiltersToParams(data); // Ваша функция
-			// router.push(`${pathname}?${newParamsString}`);
+			const trimmed = searchParamUtil.trim(data);
+			console.log("submited: ", trimmed);
+			router.push(`${pathname}?page=1&${searchParamUtil.stringify(trimmed)}`);
 		},
 		[pathname, router],
 	);

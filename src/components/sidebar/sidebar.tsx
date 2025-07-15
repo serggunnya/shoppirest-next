@@ -1,6 +1,6 @@
 import { useGetFacetsQuery } from "@/libs/redux/services/productsApi";
-import { FiltersFormState } from "@/libs/zod/filtersSchema";
-import { IFiltersBody } from "@/types/products.interface";
+import { FiltersFormState, IFiltersBody } from "@/types/products.interface";
+import { useDebouncedState } from "@/utils/useDebouncedState";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FilterForm } from "./filterForm";
@@ -11,7 +11,12 @@ interface SidebarProps {
 	onSubmit: (data: FiltersFormState) => void;
 }
 
-export function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
+function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
+	const [filters, setFilters] = useDebouncedState<IFiltersBody>(
+		initialFilters as IFiltersBody,
+		500,
+	);
+
 	const form = useForm<FiltersFormState>({
 		defaultValues: initialFilters,
 	});
@@ -19,15 +24,15 @@ export function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
 	// Синхронизация с URL
 	useEffect(() => {
 		form.reset(initialFilters);
-	}, [initialFilters, form.reset]);
+	}, [initialFilters, form]);
 
 	// Аргументы запроса фасетов
 	const facetsRequestArgs = useMemo(
 		() => ({
-			params: { category, lang: "ru" }, // Замените на реальную категорию
-			filters: initialFilters as IFiltersBody,
+			params: { category, lang: "ru" },
+			filters: filters,
 		}),
-		[initialFilters, category],
+		[filters, category],
 	);
 
 	const { data: facets, isLoading } = useGetFacetsQuery(facetsRequestArgs);
@@ -39,7 +44,7 @@ export function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
 			) : (
 				<FormProvider {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<FilterForm facets={facets} />
+						<FilterForm facets={facets} setFilters={setFilters} />
 						<button type="submit">Фильтровать</button>
 					</form>
 				</FormProvider>
@@ -47,3 +52,5 @@ export function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
 		</div>
 	);
 }
+
+export default Sidebar;
