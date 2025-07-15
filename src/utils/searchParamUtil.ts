@@ -1,4 +1,4 @@
-import { IFiltersBody, IRangeValue } from "@/types/products.interface";
+import { FiltersFormState, IFiltersBody, IRangeValue } from "@/types/products.interface";
 
 const searchParamUtil = {
 	parse: (params: URLSearchParams): IFiltersBody => {
@@ -64,6 +64,32 @@ const searchParamUtil = {
 		}
 
 		return searchParams.toString();
+	},
+	trim: (filters: FiltersFormState): IFiltersBody => {
+		const trimmed: IFiltersBody = {};
+
+		for (const [key, value] of Object.entries(filters)) {
+			if ("val" in value && Array.isArray(value.val) && value.val.length > 0) {
+				trimmed[key] = { ...value };
+				continue;
+			}
+
+			if (
+				("min" in value && value.min !== undefined) ||
+				("max" in value && value.max !== undefined)
+			) {
+				const copyRangeValue: IRangeValue = {};
+				if (value.min !== undefined) {
+					copyRangeValue.min = value.min;
+				}
+				if (value.max !== undefined) {
+					copyRangeValue.max = value.max;
+				}
+				trimmed[key] = copyRangeValue;
+			}
+		}
+
+		return trimmed;
 	},
 };
 
