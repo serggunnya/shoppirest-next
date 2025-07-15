@@ -47,6 +47,24 @@ const searchParamUtil = {
 
 		return filters;
 	},
+	stringify: (filters: IFiltersBody): string => {
+		const searchParams = new URLSearchParams();
+		for (const [key, value] of Object.entries(filters)) {
+			if ("val" in value && Array.isArray(value.val)) {
+				searchParams.append(key, value.val.join("	"));
+				continue;
+			}
+
+			if ("min" in value && value.min !== undefined) {
+				searchParams.append(`${key}_min`, value.min.toString());
+			}
+			if ("max" in value && value.max !== undefined) {
+				searchParams.append(`${key}_max`, value.max.toString());
+			}
+		}
+
+		return searchParams.toString();
+	},
 };
 
 export default searchParamUtil;
