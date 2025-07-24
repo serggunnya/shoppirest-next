@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface DropdownProps {
 	isChecked: boolean;
@@ -24,4 +24,4 @@ const Checkbox: React.FC<DropdownProps> = ({ isChecked, isDisabled, onChange, ch
 	);
 };
 
-export default Checkbox;
+export default memo(Checkbox);
