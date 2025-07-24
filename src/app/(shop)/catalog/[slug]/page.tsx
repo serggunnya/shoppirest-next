@@ -34,12 +34,15 @@ export default function ProductsByCategory() {
 	);
 
 	// хук запроса продуктов
-	const { data: productsData, isLoading: isLoadingProducts } =
-		useSearchProductsQuery(productsRequestArgs);
+	const {
+		data: productsData,
+		isLoading: isLoadingProducts,
+		isFetching,
+	} = useSearchProductsQuery(productsRequestArgs);
 
 	const totalPages = Math.ceil((productsData?.meta.total || 0) / (productsData?.meta.limit || 1));
 
-	// обработчик изменения страницы
+	//обработчик изменения страницы
 	const handlePageChange = useCallback(
 		(page: number) => () => {
 			const newParams = new URLSearchParams(searchParams.toString());
@@ -49,19 +52,13 @@ export default function ProductsByCategory() {
 		[pathname, router, searchParams],
 	);
 
-	// обработчик применения фильтров
-	const submitFilters = useCallback(
-		(data: FiltersFormState) => {
-			const trimmed = searchParamUtil.trim(data);
-			console.log("submited: ", trimmed);
-			router.push(`${pathname}?page=1&${searchParamUtil.stringify(trimmed)}`);
-		},
-		[pathname, router],
-	);
-
 	return (
 		<div className="w-full flex">
-			<Sidebar category={category} initialFilters={appliedFilters} onSubmit={submitFilters} />
+			<Sidebar
+				category={category}
+				initialFilters={appliedFilters}
+				isFetchingProducts={isFetching}
+			/>
 
 			<div className="flex flex-col w-full items-center p-8">
 				<Pagination
@@ -70,6 +67,7 @@ export default function ProductsByCategory() {
 					isLoading={isLoadingProducts}
 					onPageChange={handlePageChange}
 				/>
+
 				<ProductsList products={productsData?.products} isLoading={isLoadingProducts} />
 			</div>
 		</div>

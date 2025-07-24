@@ -3,53 +3,50 @@ import { FiltersFormState, IFiltersBody } from "@/types/products.interface";
 import { useDebouncedState } from "@/utils/useDebouncedState";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { FilterForm } from "./filterForm";
+import FilterForm from "./filterForm";
 
 interface SidebarProps {
-	initialFilters: FiltersFormState;
+	initialFilters: IFiltersBody;
 	category: string;
-	onSubmit: (data: FiltersFormState) => void;
+	isFetchingProducts: boolean;
 }
 
-function Sidebar({ initialFilters, category, onSubmit }: SidebarProps) {
-	const [filters, setFilters] = useDebouncedState<IFiltersBody>(
-		initialFilters as IFiltersBody,
-		500,
-	);
+function Sidebar({ category, initialFilters, isFetchingProducts }: SidebarProps) {
+	const [updatedFilters, setUpdatedFilters] = useDebouncedState<IFiltersBody>(initialFilters, 200);
 
-	const form = useForm<FiltersFormState>({
-		defaultValues: initialFilters,
-	});
+	const filtersForm = useForm<FiltersFormState>({ defaultValues: initialFilters });
+	const { reset } = filtersForm;
 
-	// Синхронизация с URL
+	// сброс состояния формы
 	useEffect(() => {
-		form.reset(initialFilters);
-	}, [initialFilters, form]);
+		reset(initialFilters);
+	}, [initialFilters, reset]);
 
 	// Аргументы запроса фасетов
 	const facetsRequestArgs = useMemo(
 		() => ({
 			params: { category, lang: "ru" },
-			filters: filters,
+			filters: updatedFilters,
 		}),
-		[filters, category],
+		[updatedFilters, category],
 	);
 
-	const { data: facets, isLoading } = useGetFacetsQuery(facetsRequestArgs);
+	const { data: facets, isLoading: isFacetsLoading } = useGetFacetsQuery(facetsRequestArgs);
 
 	return (
-		<div className="w-[320px] bg-white px-4 pb-10 py-2 overflow-y-scroll">
-			{isLoading ? (
+		<aside className="w-[320px] relative bg-white p-4 inset-shadow-[0_2px_20px_-7px_#000]">
+			{isFacetsLoading ? (
 				"...загрузка"
 			) : (
-				<FormProvider {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<FilterForm facets={facets} setFilters={setFilters} />
-						<button type="submit">Фильтровать</button>
-					</form>
+				<FormProvider {...filtersForm}>
+					<FilterForm
+						facets={facets}
+						isFetchingProducts={isFetchingProducts}
+						updateFilters={setUpdatedFilters}
+					/>
 				</FormProvider>
 			)}
-		</div>
+		</aside>
 	);
 }
 

@@ -1,39 +1,83 @@
-import { IFacet, IFiltersBody, IRangeOption, ISelectableOption } from "@/types/products.interface";
-import CheckboxFilter from "./checkboxFilter";
-import RangeFilter from "./rangeFilter";
+import {
+	FiltersFormState,
+	IFacet,
+	IRangeOption,
+	ISelectableOption,
+} from "@/types/products.interface";
+import searchParamUtil from "@/utils/searchParamUtil";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback } from "react";
+import { useFormContext } from "react-hook-form";
+import CheckboxGroup from "./checkboxGroup";
+import RangeGroup from "./rangeGroup";
 
 interface FilterFormProps {
 	facets: IFacet[] | undefined;
-	setFilters: (data: IFiltersBody) => void;
+	isFetchingProducts: boolean;
+	updateFilters: (data: FiltersFormState) => void;
 }
 
-// Внутренний компонент, который имеет доступ к данным фасетов
-export function FilterForm({ facets, setFilters }: FilterFormProps) {
-	return (
-		<ul>
-			{facets?.map((facet) => {
-				return (
-					<li key={facet?.id} className="mb-3">
-						<h2>{facet?.name}</h2>
-						<div>
-							{facet.options.map((option, i) => {
-								if (facet.type === "NUMERIC") {
-									return <RangeFilter key={i} option={option as IRangeOption} />;
-								}
-								return (
-									<CheckboxFilter
-										key={i}
-										type={facet.type}
-										option={option as ISelectableOption}
-										display_value={facet.display_value}
-										setFilters={setFilters}
-									/>
-								);
-							})}
-						</div>
-					</li>
-				);
-			})}
-		</ul>
+const FilterForm = ({ facets, isFetchingProducts, updateFilters }: FilterFormProps) => {
+	const router = useRouter();
+	const pathname = usePathname();
+
+	// prettier-ignore
+	const { handleSubmit, reset, formState: { isDirty } } = useFormContext();
+
+	// обработчик применения фильтров
+	const submitFilters = useCallback(
+		async (data: FiltersFormState) => {
+			const trimmed = searchParamUtil.trim(data);
+			await router.push(`${pathname}?page=1&${searchParamUtil.stringify(trimmed)}`);
+			reset(data);
+		},
+		[pathname, router, reset],
 	);
-}
+
+	return (
+		<>
+			<div
+				className="flex flex-col items-center sticky top-0
+					pt-4 p-4 mr-5 mb-4 bg-white border-b border-b-[#ccc] z-100"
+			>
+				<button
+					type="submit"
+					form="filters-form"
+					disabled={!isDirty}
+					className="bg-blue-500 text-white rounded-md px-10 py-2
+							 disabled:bg-gray-300 disabled:text-gray-500 cursor-pointer"
+				>
+					{isFetchingProducts ? "Применяем..." : "Применить"}
+				</button>
+			</div>
+			<div className="sticky top-30 bottom-0 h-[calc(100vh-3rem)] overflow-y-auto scrolling-touch">
+				<form id="filters-form" className="flex flex-col" onSubmit={handleSubmit(submitFilters)}>
+					{facets?.map((facet) => {
+						return (
+							<div key={facet?.id} className="mb-3">
+								<span className="block text-base font-bold mb-2">{facet?.name}</span>
+								<div className="pb-4 border-b border-b-[#ccc]">
+									{facet.options.map((option, i) => {
+										if (facet.type === "NUMERIC") {
+											return <RangeGroup key={i} option={option as IRangeOption} />;
+										}
+										return (
+											<CheckboxGroup
+												key={i}
+												type={facet.type}
+												option={option as ISelectableOption}
+												display_value={facet.display_value}
+												updateFilters={updateFilters}
+											/>
+										);
+									})}
+								</div>
+							</div>
+						);
+					})}
+				</form>
+			</div>
+		</>
+	);
+};
+export default FilterForm;
