@@ -1,6 +1,7 @@
 import { useGetFacetsQuery } from "@/libs/redux/services/productsApi";
 import { FiltersFormState, IFiltersBody } from "@/types/products.interface";
 import { useDebouncedState } from "@/utils/useDebouncedState";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import FilterForm from "./filterForm";
@@ -12,6 +13,9 @@ interface SidebarProps {
 }
 
 function Sidebar({ category, initialFilters, isFetchingProducts }: SidebarProps) {
+	const lang = String(useParams().lang);
+
+	// Debounced состояние фильтров
 	const [updatedFilters, setUpdatedFilters] = useDebouncedState<IFiltersBody>(initialFilters, 200);
 
 	const filtersForm = useForm<FiltersFormState>({ defaultValues: initialFilters });
@@ -24,13 +28,11 @@ function Sidebar({ category, initialFilters, isFetchingProducts }: SidebarProps)
 
 	// Аргументы запроса фасетов
 	const facetsRequestArgs = useMemo(
-		() => ({
-			params: { category, lang: "ru" },
-			filters: updatedFilters,
-		}),
-		[updatedFilters, category],
+		() => ({ params: { category, lang }, filters: updatedFilters }),
+		[lang, updatedFilters, category],
 	);
 
+	// хук запроса фасетов использующий Debounce
 	const { data: facets, isLoading: isFacetsLoading } = useGetFacetsQuery(facetsRequestArgs);
 
 	return (

@@ -3,7 +3,7 @@ import Logo from "@/components/layout/header/logo";
 import SearchBar from "@/components/layout/header/searchBar";
 import CheckAuth from "./checkAuth";
 
-export default function Header() {
+const Header: React.FC = () => {
 	return (
 		<header className="bg-blue-500 fixed w-full z-1000 py-2 shadow-[0_0_15px_0_#000]">
 			<nav>
@@ -27,4 +27,6 @@ export default function Header() {
 			</nav>
 		</header>
 	);
-}
+};
+
+export default Header;

@@ -14,11 +14,13 @@ export default function ProductsByCategory() {
 	const router = useRouter();
 	const pathname = usePathname();
 
+	const lang = String(useParams().lang);
 	const category = String(useParams().slug);
+
 	const searchParams = useSearchParams();
 	const page = Number(searchParams.get("page") || 1);
 
-	// "Примененные" фильтры взятые из URL - источник правды.
+	// Примененные фильтры из URL - источник правды.
 	const appliedFilters: FiltersFormState = useMemo(
 		() => searchParamUtil.parse(searchParams),
 		[searchParams],
@@ -27,20 +29,17 @@ export default function ProductsByCategory() {
 	// объект запроса продуктов
 	const productsRequestArgs: ISearchRequest = useMemo(
 		() => ({
-			params: { category, page, limit: 5, sortBy: "default", lang: "ru" },
+			params: { category, page, limit: 5, sortBy: "default", lang },
 			filters: appliedFilters as IFiltersBody,
 		}),
-		[category, page, appliedFilters],
+		[lang, category, page, appliedFilters],
 	);
 
 	// хук запроса продуктов
-	const {
-		data: productsData,
-		isLoading: isLoadingProducts,
-		isFetching,
-	} = useSearchProductsQuery(productsRequestArgs);
+	const { data, isLoading, isFetching } = useSearchProductsQuery(productsRequestArgs);
 
-	const totalPages = Math.ceil((productsData?.meta.total || 0) / (productsData?.meta.limit || 1));
+	// количество страниц для пагинации
+	const totalPages = Math.ceil((data?.meta.total || 0) / (data?.meta.limit || 1));
 
 	//обработчик изменения страницы
 	const handlePageChange = useCallback(
@@ -64,11 +63,11 @@ export default function ProductsByCategory() {
 				<Pagination
 					currentPage={productsRequestArgs.params.page}
 					pages={totalPages}
-					isLoading={isLoadingProducts}
+					isLoading={isLoading}
 					onPageChange={handlePageChange}
 				/>
 
-				<ProductsList products={productsData?.products} isLoading={isLoadingProducts} />
+				<ProductsList products={data?.products} isLoading={isLoading} />
 			</div>
 		</div>
 	);

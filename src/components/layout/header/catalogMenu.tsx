@@ -1,20 +1,31 @@
+"use client";
+
 import Dropdown from "@/components/ui/dropdown/dropdown";
+import { useGetCategoriesQuery } from "@/libs/redux/services/productsApi";
 import { ICategory } from "@/types/products.interface";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export default async function CatalogMenu() {
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories?lang=ru`);
-	const categories: ICategory[] = await response.json();
+const CatalogMenu: React.FC = () => {
+	const { lang } = useParams();
+
+	const { data: categories, isLoading } = useGetCategoriesQuery(String(lang));
 
 	return (
 		<Dropdown title="Каталог">
-			<ul>
-				{categories.map((category: ICategory) => (
-					<li key={category.id}>
-						<Link href={`/catalog/${category.slug}?page=1`}>{category.name}</Link>
-					</li>
-				))}
-			</ul>
+			{isLoading ? (
+				"...загрузка"
+			) : (
+				<ul>
+					{categories?.map((category: ICategory) => (
+						<li key={category.id}>
+							<Link href={`/catalog/${category.slug}?page=1`}>{category.name}</Link>
+						</li>
+					))}
+				</ul>
+			)}
 		</Dropdown>
 	);
-}
+};
+
+export default CatalogMenu;
