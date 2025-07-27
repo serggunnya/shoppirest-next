@@ -5,11 +5,23 @@ import { NextResponse } from "next/server";
 const authRoutes = ["/login", "/register"];
 const protectedRoutes = ["/profile", "/cart", "/orders", "/checkout"];
 
+import createIntlMiddleware from "next-intl/middleware";
+
+// языки по умолчанию
+const locales = ["en", "ru"];
+const defaultLocale = "ru";
+
+// middleware для i18n
+const intlMiddleware = createIntlMiddleware({ locales, defaultLocale });
+
 export async function middleware(request: NextRequest) {
+	const pathname = request.nextUrl.pathname;
 	const accessToken = request.cookies.get("ACCESS_TOKEN");
 	const refreshToken = request.cookies.get("REFRESH_TOKEN");
 
-	const pathname = request.nextUrl.pathname;
+	const i18nResponse = intlMiddleware(request);
+	const lang = i18nResponse.headers.get("x-next-intl-locale") || defaultLocale;
+
 	const isAuthRoute = authRoutes.includes(pathname);
 	const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
@@ -19,7 +31,6 @@ export async function middleware(request: NextRequest) {
 			const response = await fetch(new URL(path, request.url), {
 				method: "POST",
 				credentials: "include",
-				// headers: { Cookie: `REFRESH_TOKEN=${refreshToken}` },
 			});
 
 			if (response.ok) {
@@ -27,19 +38,19 @@ export async function middleware(request: NextRequest) {
 			}
 		} catch (error) {
 			console.error("Error refreshing access token:", error);
-			return NextResponse.redirect(new URL("/login", request.url));
+			return NextResponse.redirect(new URL(`/${lang}/login`, request.nextUrl.clone()));
 		}
 	}
 
 	if (isProtectedRoute && !accessToken && !refreshToken) {
-		return NextResponse.redirect(new URL("/login", request.url));
+		return NextResponse.redirect(new URL(`/${lang}/login`, request.nextUrl.clone()));
 	}
 
 	if (isAuthRoute && accessToken) {
-		return NextResponse.redirect(new URL("/", request.url));
+		return NextResponse.redirect(new URL(`/${lang}/`, request.nextUrl.clone()));
 	}
 
-	return NextResponse.next();
+	return i18nResponse;
 }
 
 export const config = {
