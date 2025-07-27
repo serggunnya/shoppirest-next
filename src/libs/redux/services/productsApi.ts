@@ -1,4 +1,5 @@
 import {
+	ICategory,
 	IFacet,
 	IFacetsRequest,
 	ISearchRequest,
@@ -9,6 +10,9 @@ import { baseApi } from "./baseApi";
 
 export const ProductsApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
+		getCategories: builder.query<ICategory[], string>({
+			query: (lang) => `/api/v1/categories?lang=${lang}`,
+		}),
 		searchProducts: builder.query<ISearchResponse, ISearchRequest>({
 			query: ({ params, filters }: ISearchRequest) => {
 				const urlParams = new URLSearchParams({
@@ -40,10 +44,7 @@ export const ProductsApi = baseApi.injectEndpoints({
 				};
 			},
 		}),
-		// getProductDetails: builder.query<IProductDetails, number>({
-		// 	query: (id: number) => `api/v1/products/${id}`,
-		// }),
 	}),
 });
 
-export const { useSearchProductsQuery, useGetFacetsQuery } = ProductsApi;
+export const { useGetCategoriesQuery, useSearchProductsQuery, useGetFacetsQuery } = ProductsApi;
