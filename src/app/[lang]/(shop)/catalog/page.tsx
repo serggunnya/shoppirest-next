@@ -5,6 +5,6 @@ export const metadata: Metadata = {
 	description: "Каталог товаров",
 };
 
-export default function CatalogPage() {
+export default function CategoriesCatalogPage() {
 	return <div>Список категорий</div>;
 }

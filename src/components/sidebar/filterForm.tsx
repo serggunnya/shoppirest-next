@@ -40,6 +40,21 @@ const FilterForm = ({ facets, isFetchingProducts, updateFilters }: FilterFormPro
 				className="flex flex-col items-center sticky top-0
 					pt-4 p-4 mr-5 mb-4 bg-white border-b border-b-[#ccc] z-100"
 			>
+				{/* <select
+							className="block w-full p-2 mb-4 font-medium text-gray-900 border
+							border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500
+							dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+							dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							name="sortBy"
+						>
+							<option defaultValue="" selected disabled={true}>
+								Сортировать...
+							</option>
+							<option value="US">United States</option>
+							<option value="CA">Canada</option>
+							<option value="FR">France</option>
+							<option value="DE">Germany</option>
+						</select> */}
 				<button
 					type="submit"
 					form="filters-form"

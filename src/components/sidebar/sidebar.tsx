@@ -1,23 +1,23 @@
-import { useGetFacetsQuery } from "@/libs/redux/services/productsApi";
-import { FiltersFormState, IFiltersBody } from "@/types/products.interface";
-import { useDebouncedState } from "@/utils/useDebouncedState";
-import { useParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { FiltersFormState, IFacet, IFiltersBody } from "@/types/products.interface";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import FilterForm from "./filterForm";
 
 interface SidebarProps {
 	initialFilters: IFiltersBody;
-	category: string;
+	facets: IFacet[] | undefined;
+	isLoading: boolean;
 	isFetchingProducts: boolean;
+	updateFilters: (data: FiltersFormState) => void;
 }
 
-function Sidebar({ category, initialFilters, isFetchingProducts }: SidebarProps) {
-	const lang = String(useParams().lang);
-
-	// Debounced состояние фильтров
-	const [updatedFilters, setUpdatedFilters] = useDebouncedState<IFiltersBody>(initialFilters, 200);
-
+function Sidebar({
+	facets,
+	isLoading,
+	initialFilters,
+	isFetchingProducts,
+	updateFilters,
+}: SidebarProps) {
 	const filtersForm = useForm<FiltersFormState>({ defaultValues: initialFilters });
 	const { reset } = filtersForm;
 
@@ -26,25 +26,16 @@ function Sidebar({ category, initialFilters, isFetchingProducts }: SidebarProps)
 		reset(initialFilters);
 	}, [initialFilters, reset]);
 
-	// Аргументы запроса фасетов
-	const facetsRequestArgs = useMemo(
-		() => ({ params: { category, lang }, filters: updatedFilters }),
-		[lang, updatedFilters, category],
-	);
-
-	// хук запроса фасетов использующий Debounce
-	const { data: facets, isLoading: isFacetsLoading } = useGetFacetsQuery(facetsRequestArgs);
-
 	return (
 		<aside className="w-[320px] relative bg-white p-4 inset-shadow-[0_2px_20px_-7px_#000]">
-			{isFacetsLoading ? (
+			{isLoading ? (
 				"...загрузка"
 			) : (
 				<FormProvider {...filtersForm}>
 					<FilterForm
 						facets={facets}
 						isFetchingProducts={isFetchingProducts}
-						updateFilters={setUpdatedFilters}
+						updateFilters={updateFilters}
 					/>
 				</FormProvider>
 			)}
