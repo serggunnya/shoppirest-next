@@ -1,6 +1,6 @@
 import { IFacet, IFiltersBody, ISearchResponse } from "@/types/products.interface";
 
-const ProductsUtil = {
+const ProductsApi = {
 	fetchProducts: async (
 		params: URLSearchParams,
 		filters: IFiltersBody,
@@ -13,7 +13,6 @@ const ProductsUtil = {
 					Accept: "application/json",
 					"Content-Type": "application/json",
 				},
-				credentials: "include",
 				method: "POST",
 				body: JSON.stringify(filters),
 				cache: "no-cache",
@@ -28,7 +27,6 @@ const ProductsUtil = {
 			throw new Error("Could not fetch products and facets. Please check the API connection.");
 		}
 	},
-
 	fetchFacets: async (params: URLSearchParams, filters: IFiltersBody): Promise<IFacet[]> => {
 		const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/facets?${params}`;
 
@@ -54,4 +52,4 @@ const ProductsUtil = {
 	},
 };
 
-export default ProductsUtil;
+export default ProductsApi;
