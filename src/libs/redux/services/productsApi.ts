@@ -2,6 +2,7 @@ import {
 	ICategory,
 	IFacet,
 	IFacetsRequest,
+	IProductDetails,
 	ISearchRequest,
 	ISearchResponse,
 } from "@/types/products.interface";
@@ -44,7 +45,15 @@ export const ProductsApi = baseApi.injectEndpoints({
 				};
 			},
 		}),
+		getProductDetails: builder.query<IProductDetails, { slug: string; lang: string }>({
+			query: ({ slug, lang }) => `/api/v1/products/${slug}?lang=${lang}`,
+		}),
 	}),
 });
 
-export const { useGetCategoriesQuery, useSearchProductsQuery, useGetFacetsQuery } = ProductsApi;
+export const {
+	useGetFacetsQuery,
+	useGetCategoriesQuery,
+	useSearchProductsQuery,
+	useGetProductDetailsQuery,
+} = ProductsApi;

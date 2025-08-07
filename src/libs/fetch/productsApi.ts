@@ -1,4 +1,4 @@
-import { IFacet, IFiltersBody, ISearchResponse } from "@/types/products.interface";
+import { IFacet, IFiltersBody, IProductDetails, ISearchResponse } from "@/types/products.interface";
 
 const ProductsApi = {
 	fetchProducts: async (
@@ -39,6 +39,28 @@ const ProductsApi = {
 				method: "POST",
 				body: JSON.stringify(filters),
 				cache: "no-cache",
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to fetch data. Status: ${response.status}`);
+			}
+
+			return await response.json();
+		} catch (error) {
+			throw new Error("Could not fetch products and facets. Please check the API connection.");
+		}
+	},
+	fetchProductDetails: async (slug: string, lang: string): Promise<IProductDetails> => {
+		const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/${slug}?lang=${lang}`;
+
+		try {
+			const response = await fetch(url, {
+				method: "GET",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+				next: { revalidate: 60 },
 			});
 
 			if (!response.ok) {
