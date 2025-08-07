@@ -29,7 +29,7 @@ interface ProductsCatalogViewProps {
 
 const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({ productData, facetsData }) => {
 	const lang = String(useParams().lang);
-	const category = String(useParams().slug);
+	const category = String(useParams().category);
 	const searchParams = useSearchParams();
 
 	// Примененные фильтры из URL - источник правды.
