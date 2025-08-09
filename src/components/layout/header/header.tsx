@@ -1,9 +1,16 @@
 import CatalogMenu from "@/components/layout/header/catalogMenu";
 import Logo from "@/components/layout/header/logo";
 import SearchBar from "@/components/layout/header/searchBar";
+import FetchProductsService from "@/libs/fetch/fetchProductsService";
 import CheckAuth from "./checkAuth";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+	lang: string;
+}
+
+const Header: React.FC<HeaderProps> = async ({ lang }) => {
+	const categories = await FetchProductsService.getCategories(lang);
+
 	return (
 		<header className="bg-blue-500 fixed w-full z-1000 py-2 shadow-[0_0_15px_0_#000]">
 			<nav>
@@ -13,7 +20,7 @@ const Header: React.FC = () => {
 							<div className="flex justify-between">
 								<Logo />
 								<div className="flex items-center">
-									<CatalogMenu />
+									<CatalogMenu categories={categories} />
 									<SearchBar />
 								</div>
 							</div>

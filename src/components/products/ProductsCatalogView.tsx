@@ -5,10 +5,10 @@ import Sidebar from "@/components/sidebar/sidebar";
 import { useAppDispatch } from "@/libs/redux";
 
 import {
-	ProductsApi,
+	ReduxProductsService,
 	useGetFacetsQuery,
 	useSearchProductsQuery,
-} from "@/libs/redux/services/productsApi";
+} from "@/libs/redux/services/reduxProductsService";
 
 import {
 	FiltersFormState,
@@ -23,13 +23,17 @@ import { useParams, usePathname, useRouter, useSearchParams } from "next/navigat
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface ProductsCatalogViewProps {
+	category: string;
 	productData: ISearchResponse;
 	facetsData: IFacet[];
 }
 
-const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({ productData, facetsData }) => {
+const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({
+	category,
+	productData,
+	facetsData,
+}) => {
 	const lang = String(useParams().lang);
-	const category = String(useParams().category);
 	const searchParams = useSearchParams();
 
 	// Примененные фильтры из URL - источник правды.
@@ -63,8 +67,10 @@ const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({ productData, 
 
 	// ГИДРАТАЦИЯ КЭША
 	useEffect(() => {
-		dispatch(ProductsApi.util.upsertQueryData("searchProducts", productsRequestArgs, productData));
-		dispatch(ProductsApi.util.upsertQueryData("getFacets", facetsRequestArgs, facetsData));
+		dispatch(
+			ReduxProductsService.util.upsertQueryData("searchProducts", productsRequestArgs, productData),
+		);
+		dispatch(ReduxProductsService.util.upsertQueryData("getFacets", facetsRequestArgs, facetsData));
 		setIsHydrated(true);
 	}, []);
 

@@ -1,4 +1,4 @@
-import ProductsApi from "@/libs/fetch/productsApi";
+import FetchProductsService from "@/libs/fetch/fetchProductsService";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -8,7 +8,7 @@ interface ProductDetailsPageProps {
 
 export async function generateMetadata({ params }: ProductDetailsPageProps): Promise<Metadata> {
 	const { lang, product } = await params;
-	const productDetails = await ProductsApi.fetchProductDetails(product, lang);
+	const productDetails = await FetchProductsService.getProductDetails(product, lang);
 
 	if (!productDetails) {
 		return {
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: ProductDetailsPageProps): Pro
 
 const ProductDetails: React.FC<ProductDetailsPageProps> = async ({ params }) => {
 	const { lang, product } = await params;
-	const productDetails = await ProductsApi.fetchProductDetails(product, lang);
+	const productDetails = await FetchProductsService.getProductDetails(product, lang);
 
 	if (!productDetails) {
 		notFound();

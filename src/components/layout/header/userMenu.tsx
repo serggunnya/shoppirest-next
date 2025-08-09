@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogoutMutation } from "@/libs/redux/services/authApi";
+import { useLogoutMutation } from "@/libs/redux/services/reduxAuthService";
 import { selectCurrentUser, selectIsLoading } from "@/libs/redux/slices/authSlice";
 import { IUser } from "@/types/user.interface";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLoginMutation } from "@/libs/redux/services/authApi";
+import { useLoginMutation } from "@/libs/redux/services/reduxAuthService";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
