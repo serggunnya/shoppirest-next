@@ -1,3 +1,4 @@
+import { reduxBaseApi } from "@/libs/redux/reduxBaseApi";
 import {
 	ICategory,
 	IFacet,
@@ -7,9 +8,8 @@ import {
 	ISearchResponse,
 } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
-import { baseApi } from "./baseApi";
 
-export const ProductsApi = baseApi.injectEndpoints({
+export const ReduxProductsService = reduxBaseApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getCategories: builder.query<ICategory[], string>({
 			query: (lang) => `/api/v1/categories?lang=${lang}`,
@@ -56,4 +56,4 @@ export const {
 	useGetCategoriesQuery,
 	useSearchProductsQuery,
 	useGetProductDetailsQuery,
-} = ProductsApi;
+} = ReduxProductsService;

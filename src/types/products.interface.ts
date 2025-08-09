@@ -5,6 +5,7 @@ export interface ICategory {
 	slug: string;
 	image: string;
 	parent_id: number;
+	children?: ICategory[];
 }
 
 export interface ISelectableValue {

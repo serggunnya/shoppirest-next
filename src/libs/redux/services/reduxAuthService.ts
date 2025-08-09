@@ -1,8 +1,8 @@
+import { reduxBaseApi } from "@/libs/redux/reduxBaseApi";
 import { ILoginCredentials, IRegisterCredentials, IUser } from "@/types/user.interface";
 import { setAuth, setLoading, setUnauth, setUser } from "../slices/authSlice";
-import { baseApi } from "./baseApi";
 
-export const authApi = baseApi.injectEndpoints({
+export const authApi = reduxBaseApi.injectEndpoints({
 	endpoints: (builder) => ({
 		register: builder.mutation({
 			query: (userData: IRegisterCredentials) => ({

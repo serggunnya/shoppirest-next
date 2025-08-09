@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { setUnauth } from "../slices/authSlice";
+import { setUnauth } from "./slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
 	baseUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -38,7 +38,7 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 	return result;
 };
 
-export const baseApi = createApi({
+export const reduxBaseApi = createApi({
 	baseQuery: baseQueryWithReauth,
 	endpoints: () => ({}),
 	tagTypes: ["User", "Products", "Cart"],

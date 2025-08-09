@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUserQuery } from "@/libs/redux/services/authApi";
+import { useGetUserQuery } from "@/libs/redux/services/reduxAuthService";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
 	// const isAuthenticated = useSelector(selectIsAuthenticated);
