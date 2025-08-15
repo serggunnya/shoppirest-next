@@ -1,11 +1,11 @@
 import { reduxBaseApi } from "@/libs/redux/reduxBaseApi";
 import {
 	ICategory,
-	IFacet,
 	IFacetsRequest,
 	IProductDetails,
 	ISearchRequest,
 	ISearchResponse,
+	TypedFacet,
 } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
 
@@ -31,7 +31,7 @@ export const ReduxProductsService = reduxBaseApi.injectEndpoints({
 				};
 			},
 		}),
-		getFacets: builder.query<IFacet[], IFacetsRequest>({
+		getFacets: builder.query<TypedFacet[], IFacetsRequest>({
 			query: ({ params, filters }: IFacetsRequest) => {
 				const urlParams = new URLSearchParams({
 					category: params.category,

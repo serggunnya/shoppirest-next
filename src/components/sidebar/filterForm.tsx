@@ -1,9 +1,4 @@
-import {
-	FiltersFormState,
-	IFacet,
-	IRangeOption,
-	ISelectableOption,
-} from "@/types/products.interface";
+import { FiltersFormState, TypedFacet } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback } from "react";
@@ -12,7 +7,7 @@ import CheckboxGroup from "./checkboxGroup";
 import RangeGroup from "./rangeGroup";
 
 interface FilterFormProps {
-	facets: IFacet[] | undefined;
+	facets: TypedFacet[] | undefined;
 	isFetchingProducts: boolean;
 	updateFilters: (data: FiltersFormState) => void;
 }
@@ -72,20 +67,17 @@ const FilterForm = ({ facets, isFetchingProducts, updateFilters }: FilterFormPro
 							<div key={facet?.id} className="mb-3">
 								<span className="block text-base font-bold mb-2">{facet?.name}</span>
 								<div className="pb-4 border-b border-b-[#ccc]">
-									{facet.options.map((option, i) => {
-										if (facet.type === "NUMERIC") {
-											return <RangeGroup key={i} option={option as IRangeOption} />;
-										}
-										return (
-											<CheckboxGroup
-												key={i}
-												type={facet.type}
-												option={option as ISelectableOption}
-												display_value={facet.display_value}
-												updateFilters={updateFilters}
-											/>
-										);
-									})}
+									{facet.type === "NUMERIC"
+										? facet.options.map((option, i) => <RangeGroup key={i} option={option} />)
+										: facet.options.map((option, i) => (
+												<CheckboxGroup
+													key={i}
+													type={facet.type}
+													option={option}
+													display_value={facet.display_value}
+													updateFilters={updateFilters}
+												/>
+											))}
 								</div>
 							</div>
 						);

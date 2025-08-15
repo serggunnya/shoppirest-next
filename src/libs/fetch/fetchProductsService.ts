@@ -1,9 +1,9 @@
 import {
 	ICategory,
-	IFacet,
 	IFiltersBody,
 	IProductDetails,
 	ISearchResponse,
+	TypedFacet,
 } from "@/types/products.interface";
 import fetchBaseApi from "./fetchBaseApi";
 
@@ -21,7 +21,7 @@ const FetchProductsService = {
 			cache: "no-cache",
 		});
 	},
-	getFacets: async (params: URLSearchParams, filters: IFiltersBody): Promise<IFacet[]> => {
+	getFacets: async (params: URLSearchParams, filters: IFiltersBody): Promise<TypedFacet[]> => {
 		return fetchBaseApi(`/products/facets?${params}`, {
 			method: "POST",
 			body: filters,

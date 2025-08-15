@@ -12,10 +12,10 @@ import {
 
 import {
 	FiltersFormState,
-	IFacet,
 	IFiltersBody,
 	ISearchRequest,
 	ISearchResponse,
+	TypedFacet,
 } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
 import { useDebouncedState } from "@/utils/useDebouncedState";
@@ -25,7 +25,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 interface ProductsCatalogViewProps {
 	category: string;
 	productData: ISearchResponse;
-	facetsData: IFacet[];
+	facetsData: TypedFacet[];
 }
 
 const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({

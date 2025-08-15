@@ -3,27 +3,23 @@
 import {
 	FiltersFormState,
 	IFiltersBody,
-	ISelectableOption,
 	ISelectableValue,
+	SelectableOptionType,
 } from "@/types/products.interface";
-import getCheckboxLabel from "@/utils/getCheckboxLabel";
+import getCheckboxLabel, { CheckboxLabelArgs } from "@/utils/getCheckboxLabel";
 import { memo, useCallback } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import Checkbox from "../ui/checkbox";
 
-type CheckboxGroupProps = {
-	option: ISelectableOption;
-	type: string;
+type CheckboxGroupProps<T extends keyof SelectableOptionType> = {
+	type: T;
+	option: SelectableOptionType[T];
 	display_value: Record<string, string> | null;
 	updateFilters: (data: IFiltersBody) => void;
 };
 
-const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
-	type,
-	option,
-	display_value,
-	updateFilters,
-}) => {
+const CheckboxGroup: React.FC<CheckboxGroupProps<keyof SelectableOptionType>> = (props) => {
+	const { type, option, display_value, updateFilters } = props;
 	const { control, getValues, setValue } = useFormContext<FiltersFormState>();
 
 	const handleChange = useCallback(() => {
@@ -59,13 +55,16 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 					const selectValue = option.data.value;
 					const isChecked = values.length > 0 && values?.includes(selectValue);
 
+					// вынужден использовать приведение через AS, не могу найти лучшлий способ
+					const labelData = { type, option, display_value } as CheckboxLabelArgs;
+
 					return (
 						<Checkbox
 							isChecked={isChecked}
 							isDisabled={option.amount === 0}
 							onChange={handleChange}
 						>
-							{getCheckboxLabel(type, option, display_value)}
+							{getCheckboxLabel(labelData)}
 						</Checkbox>
 					);
 				}}

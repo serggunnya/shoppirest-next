@@ -1,11 +1,11 @@
-import { FiltersFormState, IFacet, IFiltersBody } from "@/types/products.interface";
+import { FiltersFormState, IFiltersBody, TypedFacet } from "@/types/products.interface";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import FilterForm from "./filterForm";
 
 interface SidebarProps {
 	initialFilters: IFiltersBody;
-	facets: IFacet[] | undefined;
+	facets: TypedFacet[] | undefined;
 	isLoading: boolean;
 	isFetchingProducts: boolean;
 	updateFilters: (data: FiltersFormState) => void;
