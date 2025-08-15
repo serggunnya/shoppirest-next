@@ -1,7 +1,7 @@
 import ProductsCatalogView from "@/components/products/ProductsCatalogView";
 import SubcatalogView from "@/components/products/SubcatalogView";
 import FetchProductsService from "@/libs/fetch/fetchProductsService";
-import { ICategory } from "@/types/products.interface";
+import { Category } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: CategoryCatalogPageProps): Pr
 	const { lang, categories } = await params;
 	const category = categories[categories.length - 1];
 
-	const categoryDetails: ICategory = await FetchProductsService.getCategoryBySlug(category, lang);
+	const categoryDetails: Category = await FetchProductsService.getCategoryBySlug(category, lang);
 
 	if (!categoryDetails) {
 		return {
@@ -36,7 +36,7 @@ const ProductsCatalogPage: React.FC<CategoryCatalogPageProps> = async ({
 	const [{ lang, categories }, resolvedSearchParams] = await Promise.all([params, searchParams]);
 	const category = categories[categories.length - 1];
 
-	const categoryDetails: ICategory = await FetchProductsService.getCategoryBySlug(category, lang);
+	const categoryDetails: Category = await FetchProductsService.getCategoryBySlug(category, lang);
 
 	if (!categoryDetails) {
 		notFound();

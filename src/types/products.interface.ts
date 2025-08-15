@@ -1,14 +1,14 @@
-export interface ICategory {
+export interface Category {
 	id: number;
 	name: string;
 	description: string;
 	slug: string;
 	image: string;
 	parent_id: number;
-	children?: ICategory[];
+	children?: Category[];
 }
 
-export interface ISearchParams {
+export interface ProductsRequestParams {
 	category: string;
 	page: number;
 	limit: number;
@@ -16,35 +16,35 @@ export interface ISearchParams {
 	sortBy: string;
 }
 
-export interface IFacetsParams {
+export interface FacetsRequestParams {
 	category: string;
 	lang: string;
 }
 
-export interface ISelectableValue {
+export interface SelectValueRequest {
 	val: (string | number | boolean)[];
 }
 
-export interface IRangeValue {
+export interface RangeValueRequest {
 	min?: number;
 	max?: number;
 }
 
-export type IFiltersBody = Record<string, ISelectableValue | IRangeValue>;
+export type FiltersRequestData = Record<string, SelectValueRequest | RangeValueRequest>;
 
-export type FiltersFormState = Record<string, ISelectableValue | IRangeValue>;
+export type FiltersFormState = FiltersRequestData;
 
-export interface ISearchRequest {
-	params: ISearchParams;
-	filters: IFiltersBody;
+export interface ProductsRequest {
+	params: ProductsRequestParams;
+	filters: FiltersRequestData;
 }
 
-export interface IFacetsRequest {
-	params: IFacetsParams;
-	filters: IFiltersBody;
+export interface FacetsRequest {
+	params: FacetsRequestParams;
+	filters: FiltersRequestData;
 }
 
-export interface IProduct {
+export interface Product {
 	id: number;
 	category_id: number;
 	slug: string;
@@ -52,20 +52,20 @@ export interface IProduct {
 	name: string;
 	description: string;
 	price: string;
-	discount: number | null;
-	old_price: number | null;
+	discount: number;
+	old_price: number;
 	stock: number;
+	avg_rating: string;
+	reviews_count: number;
 	images: {
 		id: number;
 		url: string;
 		order: number;
 	};
-	avg_rating: string;
-	reviews_count: number;
 }
 
-export interface ISearchResponse {
-	products: IProduct[];
+export interface ProductsResponse {
+	products: Product[];
 	meta: {
 		total: number;
 		limit: number;
@@ -74,7 +74,7 @@ export interface ISearchResponse {
 	};
 }
 
-export interface IStringOption {
+export interface ProductStringOption {
 	alias: string;
 	amount: number;
 	data: {
@@ -82,7 +82,7 @@ export interface IStringOption {
 	};
 }
 
-export interface INumberOption {
+export interface ProductNumberOption {
 	alias: string;
 	amount: number;
 	data: {
@@ -91,7 +91,7 @@ export interface INumberOption {
 	};
 }
 
-export interface IBooleanOption {
+export interface ProductBooleanOption {
 	alias: string;
 	amount: number;
 	data: {
@@ -99,7 +99,7 @@ export interface IBooleanOption {
 	};
 }
 
-export interface IRangeOption {
+export interface ProductRangeOption {
 	alias: string;
 	data: {
 		min: number;
@@ -107,20 +107,19 @@ export interface IRangeOption {
 	};
 }
 
-export interface SelectableOptionType {
-	TEXT: IStringOption;
-	STRING: IStringOption;
-	NUMBER: INumberOption;
-	BOOLEAN: IBooleanOption;
+export interface ProductOptionsMap {
+	TEXT: ProductStringOption;
+	STRING: ProductStringOption;
+	NUMBER: ProductNumberOption;
+	BOOLEAN: ProductBooleanOption;
+	NUMERIC: ProductRangeOption;
 }
 
-export interface OptionTypeMap extends SelectableOptionType {
-	NUMERIC: IRangeOption;
-}
+export type ProductSelectOptionsMap = Omit<ProductOptionsMap, "NUMERIC">;
 
-export type AttributeType = keyof OptionTypeMap;
+export type AttributeType = keyof ProductOptionsMap;
 
-export interface IFacet<T extends AttributeType> {
+export interface BaseFacet<T extends AttributeType> {
 	id: number;
 	alias: string;
 	type: T;
@@ -128,11 +127,11 @@ export interface IFacet<T extends AttributeType> {
 	description: string;
 	display_value: Record<string, string> | null;
 	order: number;
-	options: Array<OptionTypeMap[T]>;
+	options: Array<ProductOptionsMap[T]>;
 }
 
 export type TypedFacet = {
-	[K in AttributeType]: IFacet<K>;
+	[K in AttributeType]: BaseFacet<K>;
 }[AttributeType];
 
 export interface DetailValueMap {
@@ -145,7 +144,7 @@ export interface DetailValueMap {
 
 export type DetailType = keyof DetailValueMap;
 
-interface IDetail<T extends DetailType> {
+interface BaseDetail<T extends DetailType> {
 	alias: string;
 	type: T;
 	name: string;
@@ -157,29 +156,9 @@ interface IDetail<T extends DetailType> {
 }
 
 export type TypedDetail = {
-	[K in DetailType]: IDetail<K>;
+	[K in DetailType]: BaseDetail<K>;
 }[DetailType];
 
-export interface IProductDetails extends IProduct {
+export interface ProductDetail extends Product {
 	details: TypedDetail[];
 }
-
-// export interface ISelectableOption {
-// 	alias: string;
-// 	data: {
-// 		value: string | number | boolean;
-// 		unit_div?: number;
-// 	};
-// 	amount: number;
-// }
-
-// export interface IFacet {
-// 	id: number;
-// 	alias: string;
-// 	type: string;
-// 	name: string;
-// 	description: string;
-// 	display_value: Record<string, string> | null;
-// 	order: number;
-// 	options: Array<ISelectableOption | IRangeOption>;
-// }

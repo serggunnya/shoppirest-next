@@ -1,7 +1,11 @@
-import { FiltersFormState, IFiltersBody, IRangeValue } from "@/types/products.interface";
+import {
+	FiltersFormState,
+	FiltersRequestData,
+	RangeValueRequest,
+} from "@/types/products.interface";
 
 const searchParamUtil = {
-	parse: (params: URLSearchParams): IFiltersBody => {
+	parse: (params: URLSearchParams): FiltersRequestData => {
 		const _parseStringValue = (value: string): string | number | boolean => {
 			if (value.toLowerCase() === "true") return true;
 			if (value.toLowerCase() === "false") return false;
@@ -9,7 +13,8 @@ const searchParamUtil = {
 			return value;
 		};
 
-		const filters: IFiltersBody = {};
+		const filters: FiltersRequestData = {};
+
 		const keys = Array.from(params.keys()).map((k) => k.replace(/_min$|_max$/, ""));
 
 		for (const key of keys) {
@@ -20,7 +25,7 @@ const searchParamUtil = {
 			const valList = params.get(key);
 
 			if (minVal || maxVal) {
-				const rangeValue: IRangeValue = {};
+				const rangeValue: RangeValueRequest = {};
 				if (minVal) {
 					const parsed = _parseStringValue(minVal);
 					if (typeof parsed === "number") {
@@ -47,7 +52,7 @@ const searchParamUtil = {
 
 		return filters;
 	},
-	stringify: (filters: IFiltersBody): string => {
+	stringify: (filters: FiltersRequestData): string => {
 		const searchParams = new URLSearchParams();
 		for (const [key, value] of Object.entries(filters)) {
 			if ("val" in value && Array.isArray(value.val)) {
@@ -65,8 +70,8 @@ const searchParamUtil = {
 
 		return searchParams.toString();
 	},
-	trim: (filters: FiltersFormState): IFiltersBody => {
-		const trimmed: IFiltersBody = {};
+	trim: (filters: FiltersFormState): FiltersRequestData => {
+		const trimmed: FiltersRequestData = {};
 
 		for (const [key, value] of Object.entries(filters)) {
 			if ("val" in value && Array.isArray(value.val) && value.val.length > 0) {
@@ -78,7 +83,7 @@ const searchParamUtil = {
 				("min" in value && value.min !== undefined) ||
 				("max" in value && value.max !== undefined)
 			) {
-				const copyRangeValue: IRangeValue = {};
+				const copyRangeValue: RangeValueRequest = {};
 				if (value.min !== undefined) {
 					copyRangeValue.min = value.min;
 				}

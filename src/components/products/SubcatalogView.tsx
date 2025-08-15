@@ -1,8 +1,8 @@
-import { ICategory } from "@/types/products.interface";
+import { Category } from "@/types/products.interface";
 import Link from "next/link";
 
 export type SubcatalogViewProps = {
-	category: ICategory;
+	category: Category;
 };
 
 const SubcatalogView: React.FC<SubcatalogViewProps> = ({ category }) => {

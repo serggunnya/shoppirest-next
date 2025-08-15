@@ -1,12 +1,12 @@
-import { SelectableOptionType } from "@/types/products.interface";
+import { ProductSelectOptionsMap } from "@/types/products.interface";
 
 export type CheckboxLabelArgs = {
-	[T in keyof SelectableOptionType]: {
+	[T in keyof ProductSelectOptionsMap]: {
 		type: T;
-		option: SelectableOptionType[T];
+		option: ProductSelectOptionsMap[T];
 		display_value: Record<string, string> | null;
 	};
-}[keyof SelectableOptionType];
+}[keyof ProductSelectOptionsMap];
 
 const getCheckboxLabel = (args: CheckboxLabelArgs) => {
 	const { type, option, display_value } = args;

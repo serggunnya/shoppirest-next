@@ -1,10 +1,10 @@
-import { FiltersFormState, IFiltersBody, TypedFacet } from "@/types/products.interface";
+import { FiltersFormState, FiltersRequestData, TypedFacet } from "@/types/products.interface";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import FilterForm from "./filterForm";
 
 interface SidebarProps {
-	initialFilters: IFiltersBody;
+	initialFilters: FiltersRequestData;
 	facets: TypedFacet[] | undefined;
 	isLoading: boolean;
 	isFetchingProducts: boolean;

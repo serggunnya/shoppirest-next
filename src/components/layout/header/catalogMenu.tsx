@@ -1,11 +1,11 @@
 "use client";
 
 import Dropdown from "@/components/ui/dropdown/dropdown";
-import { ICategory } from "@/types/products.interface";
+import { Category } from "@/types/products.interface";
 import Link from "next/link";
 
 interface CatalogMenuProps {
-	categories: ICategory[];
+	categories: Category[];
 }
 
 const CatalogMenu: React.FC<CatalogMenuProps> = ({ categories }) => {
@@ -19,7 +19,7 @@ const CatalogMenu: React.FC<CatalogMenuProps> = ({ categories }) => {
 				"...загрузка"
 			) : ( */}
 			<ul>
-				{categories?.map((category: ICategory) => (
+				{categories?.map((category: Category) => (
 					<li key={category.id}>
 						<Link href={`/catalog/${category.slug}?page=1`}>{category.name}</Link>
 					</li>

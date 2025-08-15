@@ -1,21 +1,21 @@
 import { reduxBaseApi } from "@/libs/redux/reduxBaseApi";
 import {
-	ICategory,
-	IFacetsRequest,
-	IProductDetails,
-	ISearchRequest,
-	ISearchResponse,
+	Category,
+	FacetsRequest,
+	ProductDetail,
+	ProductsRequest,
+	ProductsResponse,
 	TypedFacet,
 } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
 
 export const ReduxProductsService = reduxBaseApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getCategories: builder.query<ICategory[], string>({
+		getCategories: builder.query<Category[], string>({
 			query: (lang) => `/api/v1/categories?lang=${lang}`,
 		}),
-		searchProducts: builder.query<ISearchResponse, ISearchRequest>({
-			query: ({ params, filters }: ISearchRequest) => {
+		searchProducts: builder.query<ProductsResponse, ProductsRequest>({
+			query: ({ params, filters }: ProductsRequest) => {
 				const urlParams = new URLSearchParams({
 					category: params.category,
 					page: String(params.page || 1),
@@ -31,8 +31,8 @@ export const ReduxProductsService = reduxBaseApi.injectEndpoints({
 				};
 			},
 		}),
-		getFacets: builder.query<TypedFacet[], IFacetsRequest>({
-			query: ({ params, filters }: IFacetsRequest) => {
+		getFacets: builder.query<TypedFacet[], FacetsRequest>({
+			query: ({ params, filters }: FacetsRequest) => {
 				const urlParams = new URLSearchParams({
 					category: params.category,
 					lang: params.lang || "ru",
@@ -45,7 +45,7 @@ export const ReduxProductsService = reduxBaseApi.injectEndpoints({
 				};
 			},
 		}),
-		getProductDetails: builder.query<IProductDetails, { slug: string; lang: string }>({
+		getProductDetails: builder.query<ProductDetail, { slug: string; lang: string }>({
 			query: ({ slug, lang }) => `/api/v1/products/${slug}?lang=${lang}`,
 		}),
 	}),
