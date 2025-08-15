@@ -1,4 +1,5 @@
 import FetchProductsService from "@/libs/fetch/fetchProductsService";
+import getDetailValue from "@/utils/getDetailValue";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -30,7 +31,18 @@ const ProductDetails: React.FC<ProductDetailsPageProps> = async ({ params }) => 
 		notFound();
 	}
 
-	return <div>Страница товара {productDetails?.name}</div>;
+	return (
+		<div>
+			Страница товара {productDetails?.name}
+			{productDetails.details.map((detail, i) => {
+				return (
+					<div key={i} className="mb-2">
+						{detail.name}: {getDetailValue(detail)}
+					</div>
+				);
+			})}
+		</div>
+	);
 };
 
 export default ProductDetails;
