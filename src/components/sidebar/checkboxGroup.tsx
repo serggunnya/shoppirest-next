@@ -2,23 +2,22 @@
 
 import {
 	FiltersFormState,
-	IFiltersBody,
-	ISelectableValue,
-	SelectableOptionType,
+	ProductSelectOptionsMap,
+	SelectValueRequest,
 } from "@/types/products.interface";
 import getCheckboxLabel, { CheckboxLabelArgs } from "@/utils/getCheckboxLabel";
 import { memo, useCallback } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import Checkbox from "../ui/checkbox";
 
-type CheckboxGroupProps<T extends keyof SelectableOptionType> = {
+type CheckboxGroupProps<T extends keyof ProductSelectOptionsMap> = {
 	type: T;
-	option: SelectableOptionType[T];
+	option: ProductSelectOptionsMap[T];
 	display_value: Record<string, string> | null;
-	updateFilters: (data: IFiltersBody) => void;
+	updateFilters: (data: FiltersFormState) => void;
 };
 
-const CheckboxGroup: React.FC<CheckboxGroupProps<keyof SelectableOptionType>> = (props) => {
+const CheckboxGroup: React.FC<CheckboxGroupProps<keyof ProductSelectOptionsMap>> = (props) => {
 	const { type, option, display_value, updateFilters } = props;
 	const { control, getValues, setValue } = useFormContext<FiltersFormState>();
 
@@ -36,7 +35,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps<keyof SelectableOptionType>> = 
 		const newValues = isChecked
 			? fieldValues.filter((v) => v !== selectValue)
 			: [...fieldValues, selectValue];
-		const updatedField: ISelectableValue = { val: newValues };
+		const updatedField: SelectValueRequest = { val: newValues };
 
 		// Обновляем значение поля, помечая форму как "грязную"
 		setValue(option.alias, updatedField, { shouldDirty: true });
@@ -59,11 +58,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps<keyof SelectableOptionType>> = 
 					const labelData = { type, option, display_value } as CheckboxLabelArgs;
 
 					return (
-						<Checkbox
-							isChecked={isChecked}
-							isDisabled={option.amount === 0}
-							onChange={handleChange}
-						>
+						<Checkbox isChecked={isChecked} isEmpty={option.amount === 0} onChange={handleChange}>
 							{getCheckboxLabel(labelData)}
 						</Checkbox>
 					);

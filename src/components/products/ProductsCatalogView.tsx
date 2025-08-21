@@ -12,9 +12,9 @@ import {
 
 import {
 	FiltersFormState,
-	IFiltersBody,
-	ISearchRequest,
-	ISearchResponse,
+	FiltersRequestData,
+	ProductsRequest,
+	ProductsResponse,
 	TypedFacet,
 } from "@/types/products.interface";
 import searchParamUtil from "@/utils/searchParamUtil";
@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface ProductsCatalogViewProps {
 	category: string;
-	productData: ISearchResponse;
+	productData: ProductsResponse;
 	facetsData: TypedFacet[];
 }
 
@@ -45,16 +45,19 @@ const ProductsCatalogView: React.FC<ProductsCatalogViewProps> = ({
 	const page = Number(searchParams.get("page") || 1);
 
 	// объект запроса продуктов
-	const productsRequestArgs: ISearchRequest = useMemo(
+	const productsRequestArgs: ProductsRequest = useMemo(
 		() => ({
 			params: { category, page, limit: 5, sortBy: "default", lang },
-			filters: appliedFilters as IFiltersBody,
+			filters: appliedFilters as FiltersRequestData,
 		}),
 		[lang, category, page, appliedFilters],
 	);
 
 	// Debounced состояние фильтров
-	const [updatedFilters, setUpdatedFilters] = useDebouncedState<IFiltersBody>(appliedFilters, 200);
+	const [updatedFilters, setUpdatedFilters] = useDebouncedState<FiltersRequestData>(
+		appliedFilters,
+		300,
+	);
 
 	// Аргументы запроса фасетов
 	const facetsRequestArgs = useMemo(
