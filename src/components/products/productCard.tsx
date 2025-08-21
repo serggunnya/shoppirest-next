@@ -1,8 +1,8 @@
-import { IProduct } from "@/types/products.interface";
+import { Product } from "@/types/products.interface";
 import Link from "next/link";
 
 export type ProductCardProps = {
-	product: IProduct | undefined;
+	product: Product | undefined;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {

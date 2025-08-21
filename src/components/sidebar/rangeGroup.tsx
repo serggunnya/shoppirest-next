@@ -1,11 +1,11 @@
 "use client";
 
-import { IRangeOption } from "@/types/products.interface";
+import { ProductRangeOption } from "@/types/products.interface";
 import { memo } from "react";
 import RangeInput from "../ui/rangeInput";
 
 type RangeGroupProps = {
-	option: IRangeOption;
+	option: ProductRangeOption;
 };
 
 const RangeGroup: React.FC<RangeGroupProps> = ({ option }) => {

@@ -1,10 +1,10 @@
 "use client";
 
-import { IProduct } from "@/types/products.interface";
+import { Product } from "@/types/products.interface";
 import ProductCard from "./productCard";
 
 export type ProductsListProps = {
-	products: IProduct[] | undefined;
+	products: Product[] | undefined;
 	isLoading: boolean;
 };
 
