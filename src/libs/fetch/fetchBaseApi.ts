@@ -1,4 +1,4 @@
-type FetchOptions = Omit<RequestInit, "body"> & { body?: any };
+type FetchOptions = Omit<RequestInit, "body"> & { body?: unknown };
 
 async function fetchBaseApi<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
 	const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1${endpoint}`;
